@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Busca CEP</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <h1  class="header adjust-top center orange-text"> Busca CEP</h1>
+      <div class="row center">
+        <h5  class="header adjust-top col s12 light">Consulta de CEP</h5>
+        <!-- INPUT CEP -->
+        <div class="input-field col s12 m6 l3">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="cep" type="text" class="validate">
+          <label for="cep">CEP</label>
+        </div>
+        <!-- INPUT CIDADE  -->
+        <div class="input-field col s12 m6 l3">
+          <i class="material-icons prefix">location_city</i>
+          <input id="cidade" type="text" class="validate active">
+          <label for="cidade">Cidade</label>
+        </div>
+        <!-- INPUT BAIRRO  -->
+        <div class="input-field col s12 m6 l3">
+          <i class="material-icons prefix">location_on</i>
+          <input id="bairro" type="text" class="validate active">
+          <label for="bairro">Bairro</label>
+        </div>
+        <!-- INPUT ESTADO  -->
+        <div class="input-field col s12 m6 l3">
+          <i class="material-icons prefix">map</i>
+          <input id="estado" type="text" class="validate active">
+          <label for="estado">Estado</label>
+        </div>
+        <!-- INPUT DDD  -->
+        <div class="input-field col s12 m6 l3">
+          <i class="material-icons prefix">local_phone</i>
+          <input id="ddd" type="text" class="validate active">
+          <label for="ddd">DDD</label>
+        </div>
+
+        <a onclick="mostrar()" class="waves-effect waves-light btn-small"><i class="material-icons left">search</i>Buscar</a>
+        <a  class="waves-effect waves-light btn-small"><i class="material-icons left">clear</i>Limpar</a>
+      </div>
+
+    </div>
+  </div>
+
+
+  
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/script.js"></script>
+
+  </body>
+</html>
