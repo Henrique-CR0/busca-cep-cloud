@@ -1,5 +1,6 @@
 // Função de buscar por CEP
 function mostrar() {
+
 	cep = document.getElementById("cep").value // pegando valor do cep
 	// url = "https://viacep.com.br/ws/"+cep+"/json/" // url do viacep
 	url = `https://viacep.com.br/ws/${cep}/json/` // url do viacep
@@ -49,10 +50,18 @@ function mostrarRua() {
 			}
 
 			document.querySelector("#lista-ruas").innerHTML = listaRuas
+			confetti();
 		})
 }
 
 function buscarUFs() {
+
+	const cepInput = document.getElementById("cep");
+
+	const mask = IMask(cepInput, {
+		mask: '00000-000'
+	});
+
 	url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
 	listaUfs = '<option value="" disabled selected>Escolha uma UF</option>'
 

@@ -43,7 +43,7 @@
             <!-- INPUT CEP -->
             <div class="input-field col s12 m6 l3">
               <i class="material-icons prefix">account_circle</i>
-              <input id="cep" type="text" class="validate">
+              <input id="cep" type="text" data-mask="#####-###" class="validate">
               <label for="cep">CEP</label>
             </div>
             <!-- INPUT CIDADE  -->
@@ -131,11 +131,15 @@
 
 
 
-  <!--  Scripts-->
+  <!--  Scripts CDN-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js"
     integrity="sha512-h9644v03pHqrIHThkvXhB2PJ8zf5E9IyVnrSfZg8Yj8k4RsO4zldcQc4Bi9iVLUCCsqNY0b4WXVV4UB+wbWENA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"></script>
+  <script src="https://unpkg.com/imask"></script>
+
+  <!-- Script Locais -->
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
   <script src="js/script.js"></script>
