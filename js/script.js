@@ -5,9 +5,13 @@ function mostrar() {
 	// url = "https://viacep.com.br/ws/"+cep+"/json/" // url do viacep
 	url = `https://viacep.com.br/ws/${cep}/json/` // url do viacep
 
-	log = `CEP|${new Date().toLocaleDateString('pt-BR')}|${cep}`
+	const logEntry = {
+		type: "CEP",
+		date: new Date().toLocaleDateString('pt-BR'),
+		cep: cep
+	}
 
-	localStorage.setItem('logs',log)
+	pushLog(logEntry)
 
 	// BUSCANDO O CEP USANDO FETCH
 	fetch(url)
@@ -42,6 +46,16 @@ function mostrarRua() {
 		.then((ruas) => { // variavel "cep" contendo o json com o CEP do viacep
 			console.log("AQUI AS RUAS", ruas) // imprimindo os dados do cep
 
+			const logEntry = {
+				type: "RUA",
+				date: new Date().toLocaleDateString('pt-BR'),
+				uf: uf,
+				cidade: cidade,
+				rua: rua
+			}
+
+			pushLog(logEntry)
+
 			let listaRuas = ""
 
 			for (let rua of ruas) {
@@ -56,6 +70,27 @@ function mostrarRua() {
 			document.querySelector("#lista-ruas").innerHTML = listaRuas
 			confetti();
 		})
+}
+
+function getLogs() {
+	const rawLogs = localStorage.getItem('logs')
+	if (!rawLogs) return []
+	try {
+		const parsed = JSON.parse(rawLogs)
+		return Array.isArray(parsed) ? parsed : []
+	} catch (err) {
+		return []
+	}
+}
+
+function saveLogs(logs) {
+	localStorage.setItem('logs', JSON.stringify(logs))
+}
+
+function pushLog(entry) {
+	const logs = getLogs()
+	logs.unshift(entry)
+	saveLogs(logs)
 }
 
 function buscarUFs() {
@@ -77,6 +112,7 @@ function buscarUFs() {
 				listaUfs += `<option value="${uf.sigla}">${uf.nome}</option>`
 			}
 			document.querySelector("#lista-ufs").innerHTML = listaUfs
+			$('select').formSelect()
 		})
 }
 
@@ -85,7 +121,7 @@ buscarUFs()
 function buscarCidades(uf) {
 
 	url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`
-	listaCidades = '<option value="" disabled selected>Escolha umaa Cidade</option>'
+	listaCidades = '<option value="" disabled selected>Escolha uma Cidade</option>'
 
 	$.get(url, (cidades) => { //AJAX
 
@@ -93,41 +129,88 @@ function buscarCidades(uf) {
 			listaCidades += `<option value="${cidade.nome}">${cidade.nome}</option>`
 		}
 		document.querySelector("#lista-cidades").innerHTML = listaCidades
+		$('select').formSelect()
 	})
 
 }
 
-function buscarLog(log) {
-	valores = log.split("|")
-	if (valores[0].trim() === "CEP") {
-		document.querySelector('#cep-tab-link a').click();
-		document.querySelector("#cep").value = valores[2].trim()
+function buscarLog(index) {
+	const logs = getLogs()
+	const log = logs[index]
+	if (!log) return
+
+	if (log.type === "CEP") {
+		openTab('cep-tab')
+		document.querySelector("#cep").value = log.cep
 		setTimeout(() => {
 			mostrar()
 		}, 1000)
 	} else {
-		document.querySelector('#rua-tab-link a').click();
-		dados = valores[2].split("-")
-		document.querySelector("#lista-ufs").value = dados[0]
-		buscarCidades(dados[0])
-		document.querySelector("#rua").value = dados[2]
+		openTab('rua-tab')
+		document.querySelector("#lista-ufs").value = log.uf
+		buscarCidades(log.uf)
+		document.querySelector("#rua").value = log.rua
 		setTimeout(() => {
-			document.querySelector("#lista-cidades").value = dados[1]
+			document.querySelector("#lista-cidades").value = log.cidade
+			$('select').formSelect()
 			mostrarRua()
 		}, 500)
-
 	}
 }
 
-function carregarLogs(){
-	logs = localStorage.getItem("logs")
+function openTab(tabId) {
+	document.querySelectorAll('#cep-tab, #rua-tab, #log-tab').forEach((section) => {
+		section.style.display = 'none'
+	})
+	document.getElementById(tabId).style.display = 'block'
 
-	listaLogs = 
-	`
-	<li class="collection-item">
-    <div>${logs}<a href="#!" class="secondary-content"><i onclick="buscarLog('${logs}')"
-            class="material-icons">remove_red_eye</i></a></div>
-    </li>
-	`
+	const sideNavEl = document.querySelector('#nav-mobile')
+	if (window.M && sideNavEl) {
+		const instance = M.Sidenav.getInstance(sideNavEl)
+		if (instance) instance.close()
+	}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	openTab('cep-tab')
+})
+
+function limparCep() {
+	document.getElementById("cep").value = ""
+	document.getElementById("cidade").value = ""
+	document.getElementById("bairro").value = ""
+	document.getElementById("ddd").value = ""
+	document.getElementById("estado").value = ""
+	M.updateTextFields()
+}
+
+function limparRua() {
+	document.getElementById("lista-ufs").selectedIndex = 0
+	document.querySelector("#lista-cidades").innerHTML = '<option value="" disabled selected>Escolha umaa Cidade</option>'
+	document.getElementById("rua").value = ""
+	document.querySelector("#lista-ruas").innerHTML = ""
+	$('select').formSelect()
+	M.updateTextFields()
+}
+
+function carregarLogs(){
+	const logs = getLogs()
+	let listaLogs = ''
+
+	logs.forEach((log, index) => {
+		let content = ''
+		if (log.type === "CEP") {
+			content = `<strong>CEP</strong> ${log.date}<br>CEP: ${log.cep}`
+		} else {
+			content = `<strong>RUA</strong> ${log.date}<br>UF: ${log.uf} | Cidade: ${log.cidade} | Rua: ${log.rua}`
+		}
+
+		listaLogs += `
+		<li class="collection-item">
+			<div>${content}<a href="#!" class="secondary-content"><i onclick="buscarLog(${index})" class="material-icons">remove_red_eye</i></a></div>
+		</li>
+		`
+	})
+
 	document.querySelector("#lista-logs").innerHTML = listaLogs
 }

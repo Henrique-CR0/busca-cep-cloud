@@ -12,6 +12,18 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+.input-field {
+  text-align: left;
+}
+.input-field .prefix {
+  left: 0;
+}
+nav .sidenav-trigger {
+  display: block !important;
+}
+nav .sidenav-trigger i {
+  color: #fff;
+}
 .adjust-top{
 	margin-top:2px;
 }
